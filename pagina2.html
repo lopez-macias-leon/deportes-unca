@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Deportes Unca - Inscripción a Actividad</title>
+</head>
+<body>
+
+    <header>
+        <h1>Deportes Unca</h1>
+        <nav>
+            <ul>
+                <li><a href="pagina1.html">Inicio</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+                <li><a href="actividades.html">Actividades deportivas</a></li>
+                <li><a href="pagina2.html">Inscribirse a una actividad</a></li>
+                <li><a href="inscripciones.html">Mis inscripciones</a></li>
+                <li><a href="cancelar.html">Cancelar inscripción</a></li>
+                <li><a href="login.html">Iniciar sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Inscripción a Actividad Deportiva</h2>
+
+        <form action="pagina3.html" method="post">
+
+            <fieldset>
+                <legend>Información de la actividad</legend>
+
+                <label for="actividad">Actividad:</label><br>
+                <input type="text" id="actividad" name="actividad" value="Futbol" disabled><br><br>
+
+                <label for="lugar">Lugar:</label><br>
+                <input type="text" id="lugar" name="lugar" value="Cancha techada" disabled><br><br>
+
+                <label for="dia">Día:</label><br>
+                <input type="text" id="dia" name="dia" value="Martes y jueves" disabled><br><br>
+
+                <label for="horario">Horario:</label><br>
+                <input type="text" id="horario" name="horario" value="18:00 - 19:30" disabled><br><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Datos del participante</legend>
+
+                <label for="nombre">Apellido y nombre:</label><br>
+                <input type="text" id="nombre" name="nombre" maxlength="100" required><br><br>
+
+                <label for="dni">DNI:</label><br>
+                <input type="number" id="dni" name="dni" pattern="[0-9]{8}" minlength="8" maxlength="8" required><br><br>
+
+                <label for="fecha_nacimiento">Fecha de nacimiento:</label><br>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento"><br><br>
+
+                <label for="email">Correo electrónico:</label><br>
+                <input type="email" id="email" name="email"><br><br>
+
+                <label for="telefono">Teléfono:</label><br>
+                <input type="tel" id="telefono" name="telefono"><br><br>
+
+                <p>Sexo:</p>
+                <input type="radio" id="sexo_femenino" name="sexo" value="femenino">
+                <label for="sexo_femenino">Femenino</label><br>
+                <input type="radio" id="sexo_masculino" name="sexo" value="masculino">
+                <label for="sexo_masculino">Masculino</label><br>
+                <input type="radio" id="sexo_no_binario" name="sexo" value="no_binario">
+                <label for="sexo_no_binario">No binario</label><br><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Información deportiva</legend>
+
+                <label for="nivel">Nivel:</label><br>
+                <select id="nivel" name="nivel">
+                    <option value="inicial">Inicial</option>
+                    <option value="intermedio">Intermedio</option>
+                    <option value="avanzado">Avanzado</option>
+                </select><br><br>
+
+                <p>¿Posee experiencia previa?</p>
+                <input type="radio" id="experiencia_si" name="experiencia" value="si">
+                <label for="experiencia_si">Sí</label><br>
+                <input type="radio" id="experiencia_no" name="experiencia" value="no">
+                <label for="experiencia_no">No</label><br><br>
+
+                <label for="observaciones">Observaciones:</label><br>
+                <textarea id="observaciones" name="observaciones" rows="5" cols="40"></textarea><br><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Aceptación de condiciones</legend>
+
+                <input type="checkbox" id="condiciones" name="condiciones" required>
+                <label for="condiciones">Acepto las condiciones de inscripción</label><br><br>
+            </fieldset>
+
+            <input type="submit" value="Aceptar">
+            <input type="reset" value="Cancelar">
+
+        </form>
+    </main>
+
+    <footer>
+        <p>Deportes Unca &copy; 2026</p>
+    </footer>
+
+</body>
+</html>
