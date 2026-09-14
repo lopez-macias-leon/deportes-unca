@@ -1,0 +1,296 @@
+/* =========================================================
+   DEPORTES UNCA - Hoja de Estilos (TP2)
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1) SELECTORES DE ETIQUETA
+   --------------------------------------------------------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;   /* tipografía */
+    background-color: #f4f6f8;                     /* fondo */
+    color: #2c3e50;                                 /* color de texto */
+    margin: 0;
+}
+
+h1, h2, h3 {
+    color: #1a3c34;
+    font-weight: 600;
+}
+
+p {
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ---------------------------------------------------------
+   2) SELECTOR DE ETIQUETA: header
+   --------------------------------------------------------- */
+header {
+    background-color: #1a3c34;      /* fondo */
+    color: white;                    /* color de texto */
+    padding: 30px 0;                 /* espaciado interno */
+    text-align: center;              /* alineación */
+}
+
+/* selector combinado: h1 solo dentro de header */
+header h1 {
+    font-size: 2rem;                 /* tamaño */
+    margin: 0 0 5px 0;               /* margen */
+}
+
+header h2 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #cfe8df;
+    margin: 0;
+}
+
+/* ---------------------------------------------------------
+   3) SELECTOR DE ETIQUETA: nav + selectores combinados
+   --------------------------------------------------------- */
+nav {
+    background-color: #0e2820;
+    margin-top: 20px;
+}
+
+/* combinado: ul SOLO dentro de nav */
+nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 0;
+    margin: 0;
+}
+
+/* combinado triple: a dentro de li dentro de ul dentro de nav */
+nav ul li a {
+    color: white;
+    padding: 8px 14px;
+    border-radius: 4px;              /* borde redondeado */
+    font-weight: 600;
+}
+
+/* pseudoclase */
+nav ul li a:hover {
+    background-color: #d97b29;
+}
+
+/* ---------------------------------------------------------
+   4) SELECTOR DE ETIQUETA: main y section
+   --------------------------------------------------------- */
+main {
+    padding: 30px 0;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+/* ---------------------------------------------------------
+   5) SELECTOR DE ID
+   --------------------------------------------------------- */
+#actividades h2 {
+    border-bottom: 3px solid #d97b29;   /* borde */
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+/* ---------------------------------------------------------
+   6) SELECTOR DE CLASE (tarjetas de actividad)
+   --------------------------------------------------------- */
+.tarjeta-actividad {
+    background-color: white;           /* fondo */
+    border: 1px solid #dcdfe3;         /* borde */
+    border-radius: 8px;
+    padding: 20px;                     /* espaciado interno */
+    margin-bottom: 20px;               /* espaciado externo */
+}
+
+.tarjeta-actividad h3 {
+    color: #d97b29;
+    margin-top: 0;
+}
+
+/* ---------------------------------------------------------
+   7) BOTONES (selectores de clase)
+   --------------------------------------------------------- */
+.boton-principal,
+.boton-secundario,
+.boton-peligro {
+    display: inline-block;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+}
+
+.boton-principal {
+    background-color: #1a3c34;
+    color: white;
+}
+
+.boton-secundario {
+    background-color: #e0e0e0;
+    color: #2c3e50;
+}
+
+.boton-peligro {
+    background-color: #c0392b;
+    color: white;
+}
+
+/* ---------------------------------------------------------
+   8) FORMULARIOS (selector de etiqueta + combinados)
+   --------------------------------------------------------- */
+fieldset {
+    background-color: white;
+    border: 1px solid #dcdfe3;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+legend {
+    font-weight: 600;
+    color: #1a3c34;
+    padding: 0 8px;
+}
+
+form label {
+    display: block;
+    font-weight: 600;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"],
+form input[type="email"],
+form input[type="tel"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cfd4d9;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+form input:disabled {
+    background-color: #ececec;
+    color: #777;
+}
+
+.grupo-radio,
+.grupo-checkbox {
+    margin-top: 8px;
+}
+
+.grupo-radio label,
+.grupo-checkbox label {
+    display: inline;
+    font-weight: 400;
+    margin-right: 15px;
+}
+
+/* ---------------------------------------------------------
+   9) TABLAS
+   --------------------------------------------------------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+th, td {
+    border: 1px solid #dcdfe3;
+    padding: 12px;
+    text-align: left;                  /* alineación */
+}
+
+th {
+    background-color: #1a3c34;
+    color: white;
+}
+
+.estado-activa {
+    background-color: #e3f6e8;
+    color: #1e7d3a;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+/* ---------------------------------------------------------
+   10) FOOTER
+   --------------------------------------------------------- */
+footer {
+    background-color: #1a3c34;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 30px;
+}
+
+footer p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+}
+
+/* =========================================================
+   DISEÑO RESPONSIVO - pantallas menores a 768px
+   ========================================================= */
+@media (max-width: 768px) {
+
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    /* la tabla se reorganiza como tarjetas en pantallas chicas */
+    table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody tr {
+        margin-bottom: 15px;
+        border: 1px solid #dcdfe3;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    td {
+        border: none;
+        padding: 6px 0;
+    }
+
+    td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #1a3c34;
+        display: block;
+        font-size: 0.8rem;
+    }
+}
