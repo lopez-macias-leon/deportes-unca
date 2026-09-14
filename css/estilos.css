@@ -234,6 +234,40 @@ th {
     font-size: 0.85rem;
 }
 
+.estado-completo {
+    background-color: #fbe4e2;
+    color: #a02c22;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+/* ---------------------------------------------------------
+   TP3: mensajes de error de validación
+   --------------------------------------------------------- */
+.mensaje-error {
+    display: block;
+    color: #c0392b;
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+
+/* ---------------------------------------------------------
+   TP3: bloques de participante generados dinámicamente
+   --------------------------------------------------------- */
+.bloque-participante {
+    background-color: white;
+    border: 1px solid #dcdfe3;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.bloque-participante h3 {
+    color: #d97b29;
+    margin-top: 0;
+}
+
 /* ---------------------------------------------------------
    10) FOOTER
    --------------------------------------------------------- */
