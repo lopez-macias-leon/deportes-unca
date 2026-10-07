@@ -1,0 +1,7 @@
+﻿deportes/Scripts/
+deportes/Lib/
+deportes/Include/
+deportes/pyvenv.cfg
+__pycache__/
+*.pyc
+db.sqlite3
