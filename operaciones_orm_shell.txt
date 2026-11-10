@@ -1,0 +1,194 @@
+TRABAJO PRACTICO N° VI - MODELOS EN DJANGO
+Programación III - Ingeniería en Informática - FTyCA UNCA
+Alumno: Lopez Macias Leon - Legajo MU 01949
+Proyecto: deportes  |  Aplicación: reservas  |  Rama: tp6-django
+
+==============================================================================
+MIGRACIONES
+==============================================================================
+$ python manage.py makemigrations reservas
+Migrations for 'reservas':
+  reservas/migrations/0001_initial.py
+    + Create model ActividadDeportiva
+    + Create model Horario
+    + Create model Inscripcion
+    + Create constraint hora_fin_posterior_a_hora_inicio on model horario
+    + Create constraint inscripcion_unica_por_horario on model inscripcion
+
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, reservas, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying reservas.0001_initial... OK
+  Applying sessions.0001_initial... OK
+
+$ python manage.py showmigrations reservas
+reservas
+ [X] 0001_initial
+
+Verificación de las tablas creadas (python manage.py shell):
+>>> from django.db import connection
+>>> [t for t in connection.introspection.table_names() if t.startswith('reservas_')]
+['reservas_actividaddeportiva', 'reservas_horario', 'reservas_inscripcion']
+
+==============================================================================
+OPERACIONES CON EL ORM EN LA CONSOLA SHELL
+$ python manage.py shell
+==============================================================================
+15 objects imported automatically (use -v 2 for details).
+
+Python 3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from datetime import time
+>>> from reservas.models import ActividadDeportiva, Horario, Inscripcion
+>>> 
+==============================================================================
+1. CREAR Y GUARDAR AL MENOS TRES ACTIVIDADES DEPORTIVAS
+==============================================================================
+>>> futbol = ActividadDeportiva(nombre="Fútbol 5", descripcion="Partidos de fútbol 5 mixto para estudiantes.", lugar="Cancha del Predio UNCA", cupo=20)
+>>> futbol.save()
+>>> voley = ActividadDeportiva.objects.create(nombre="Vóley", descripcion="Entrenamiento y partidos de vóley.", lugar="Gimnasio de la Facultad de Tecnología", cupo=14)
+>>> natacion = ActividadDeportiva.objects.create(nombre="Natación", descripcion="Clases de natación para principiantes.", lugar="Pileta del Polideportivo Fray Mamerto Esquiú", cupo=10)
+>>> futbol.id, voley.id, natacion.id
+(1, 2, 3)
+>>> ActividadDeportiva.objects.count()
+3
+>>> 
+==============================================================================
+2. CREAR Y GUARDAR AL MENOS DOS HORARIOS PARA UNA DE LAS ACTIVIDADES
+==============================================================================
+>>> h1 = Horario.objects.create(actividad=futbol, dia="LUN", hora_inicio=time(18, 0), hora_fin=time(19, 30))
+>>> h2 = Horario.objects.create(actividad=futbol, dia="MIE", hora_inicio=time(20, 0), hora_fin=time(21, 30))
+>>> h3 = Horario(actividad=voley, dia="JUE", hora_inicio=time(17, 0), hora_fin=time(18, 30))
+>>> h3.save()
+>>> print(h1)
+Fútbol 5 - Lunes 18:00 a 19:30
+>>> print(h2)
+Fútbol 5 - Miércoles 20:00 a 21:30
+>>> print(h3)
+Vóley - Jueves 17:00 a 18:30
+>>> 
+==============================================================================
+3. CREAR Y GUARDAR AL MENOS TRES INSCRIPCIONES ASOCIADAS A LOS HORARIOS
+==============================================================================
+>>> i1 = Inscripcion.objects.create(nombre="Juan", apellido="Pérez", dni="44123456", horario=h1)
+>>> i2 = Inscripcion.objects.create(nombre="María", apellido="Gómez", dni="43987654", horario=h1)
+>>> i3 = Inscripcion.objects.create(nombre="Lucas", apellido="Díaz", dni="45111222", horario=h2)
+>>> i4 = Inscripcion.objects.create(nombre="Sofía", apellido="Herrera", dni="42555666", horario=h3)
+>>> Inscripcion.objects.count()
+4
+>>> i1.fecha_inscripcion, i1.estado
+(datetime.date(2026, 11, 9), 'ACTIVA')
+>>> 
+==============================================================================
+4. CONSULTAR Y MOSTRAR TODAS LAS ACTIVIDADES DEPORTIVAS REGISTRADAS
+==============================================================================
+>>> ActividadDeportiva.objects.all()
+<QuerySet [<ActividadDeportiva: Fútbol 5>, <ActividadDeportiva: Natación>, <ActividadDeportiva: Vóley>]>
+>>> for a in ActividadDeportiva.objects.all():
+...     print(f"{a.id} | {a.nombre} | {a.lugar} | cupo: {a.cupo}")
+... 
+1 | Fútbol 5 | Cancha del Predio UNCA | cupo: 20
+3 | Natación | Pileta del Polideportivo Fray Mamerto Esquiú | cupo: 10
+2 | Vóley | Gimnasio de la Facultad de Tecnología | cupo: 14
+>>> 
+==============================================================================
+5. CONSULTAR Y MOSTRAR LOS HORARIOS DE UNA ACTIVIDAD DETERMINADA
+==============================================================================
+>>> # Forma 1: filtrando por la ForeignKey
+>>> Horario.objects.filter(actividad__nombre="Fútbol 5")
+<QuerySet [<Horario: Fútbol 5 - Lunes 18:00 a 19:30>, <Horario: Fútbol 5 - Miércoles 20:00 a 21:30>]>
+>>> # Forma 2: desde la actividad, usando el related_name "horarios"
+>>> actividad = ActividadDeportiva.objects.get(nombre="Fútbol 5")
+>>> for h in actividad.horarios.all():
+...     print(h.get_dia_display(), h.hora_inicio, "-", h.hora_fin)
+... 
+Lunes 18:00:00 - 19:30:00
+Miércoles 20:00:00 - 21:30:00
+>>> 
+==============================================================================
+6. FILTRAR Y MOSTRAR LAS INSCRIPCIONES EN ESTADO ACTIVA
+==============================================================================
+>>> activas = Inscripcion.objects.filter(estado="ACTIVA")
+>>> activas.count()
+4
+>>> for i in activas:
+...     print(i.apellido, i.nombre, "-", i.get_estado_display())
+... 
+Díaz Lucas - Activa
+Gómez María - Activa
+Herrera Sofía - Activa
+Pérez Juan - Activa
+>>> 
+==============================================================================
+7. CONSULTAR LAS INSCRIPCIONES DE UN HORARIO DETERMINADO
+==============================================================================
+>>> horario = Horario.objects.get(actividad__nombre="Fútbol 5", dia="LUN")
+>>> print(horario)
+Fútbol 5 - Lunes 18:00 a 19:30
+>>> horario.inscripciones.all()
+<QuerySet [<Inscripcion: Gómez, María (43987654) - Fútbol 5 - Lunes 18:00 a 19:30>, <Inscripcion: Pérez, Juan (44123456) - Fútbol 5 - Lunes 18:00 a 19:30>]>
+>>> Inscripcion.objects.filter(horario=horario).values_list("apellido", "nombre", "dni")
+<QuerySet [('Gómez', 'María', '43987654'), ('Pérez', 'Juan', '44123456')]>
+>>> 
+==============================================================================
+8. MODIFICAR EL CUPO DE UNA ACTIVIDAD DEPORTIVA
+==============================================================================
+>>> voley = ActividadDeportiva.objects.get(nombre="Vóley")
+>>> voley.cupo
+14
+>>> voley.cupo = 18
+>>> voley.save()
+>>> ActividadDeportiva.objects.get(nombre="Vóley").cupo
+18
+>>> 
+==============================================================================
+9. CAMBIAR EL ESTADO DE UNA INSCRIPCION DE ACTIVA A CANCELADA
+==============================================================================
+>>> insc = Inscripcion.objects.get(dni="43987654", horario=horario)
+>>> insc.estado
+'ACTIVA'
+>>> insc.estado = "CANCELADA"
+>>> insc.save()
+>>> Inscripcion.objects.get(pk=insc.pk).get_estado_display()
+'Cancelada'
+>>> Inscripcion.objects.filter(estado="ACTIVA").count()
+3
+>>> Inscripcion.objects.filter(estado="CANCELADA")
+<QuerySet [<Inscripcion: Gómez, María (43987654) - Fútbol 5 - Lunes 18:00 a 19:30>]>
+>>> 
+==============================================================================
+10. ELIMINAR UNA INSCRIPCION DE LA BASE DE DATOS
+==============================================================================
+>>> Inscripcion.objects.count()
+4
+>>> borrar = Inscripcion.objects.get(dni="42555666")
+>>> print(borrar)
+Herrera, Sofía (42555666) - Vóley - Jueves 17:00 a 18:30
+>>> borrar.delete()
+(1, {'reservas.Inscripcion': 1})
+>>> Inscripcion.objects.count()
+3
+>>> Inscripcion.objects.filter(dni="42555666").exists()
+False
+>>> Inscripcion.objects.all()
+<QuerySet [<Inscripcion: Díaz, Lucas (45111222) - Fútbol 5 - Miércoles 20:00 a 21:30>, <Inscripcion: Gómez, María (43987654) - Fútbol 5 - Lunes 18:00 a 19:30>, <Inscripcion: Pérez, Juan (44123456) - Fútbol 5 - Lunes 18:00 a 19:30>]>
+>>> exit()
