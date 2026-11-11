@@ -4,10 +4,10 @@
 
 {% block contenido %}
 <section class="panel">
-    <h2>Registrar una nueva actividad deportiva</h2>
-    <p>Completá los siguientes datos para incorporar una actividad a la plataforma.</p>
+    <h2>{{ titulo }}</h2>
+    <p>Completá los datos de la actividad.</p>
 
-    <form method="post" action="{% url 'reservas:agregar_actividad' %}">
+    <form method="post">
         {% csrf_token %}
         {{ form.non_field_errors }}
 

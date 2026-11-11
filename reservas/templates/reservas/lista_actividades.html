@@ -18,10 +18,14 @@
     {% empty %}
         <article>
             <p>Todavía no hay actividades registradas.</p>
-            <a class="boton" href="{% url 'reservas:agregar_actividad' %}">Agregar la primera actividad</a>
+            {% if perms.reservas.add_actividaddeportiva %}
+                <a class="boton" href="{% url 'reservas:agregar_actividad' %}">Agregar la primera actividad</a>
+            {% endif %}
         </article>
     {% endfor %}
 
-    <a class="boton" href="{% url 'reservas:agregar_actividad' %}">Registrar nueva actividad</a>
+    {% if perms.reservas.add_actividaddeportiva %}
+        <a class="boton" href="{% url 'reservas:agregar_actividad' %}">Registrar nueva actividad</a>
+    {% endif %}
 </section>
 {% endblock %}

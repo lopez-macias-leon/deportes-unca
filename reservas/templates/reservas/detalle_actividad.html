@@ -8,6 +8,18 @@
     <p><strong>Descripción:</strong> {{ actividad.descripcion }}</p>
     <p><strong>Lugar:</strong> {{ actividad.lugar }}</p>
     <p><strong>Cupo:</strong> {{ actividad.cupo }} participantes</p>
-    <a class="boton" href="{% url 'reservas:lista_actividades' %}">Volver a actividades</a>
+    <div class="acciones">
+        <a class="boton" href="{% url 'reservas:lista_actividades' %}">Volver a actividades</a>
+        {% if perms.reservas.change_actividaddeportiva %}
+            <a class="boton" href="{% url 'reservas:editar_actividad' actividad.id %}">Editar</a>
+        {% endif %}
+        {% if perms.reservas.delete_actividaddeportiva %}
+            <form method="post" action="{% url 'reservas:eliminar_actividad' actividad.id %}"
+                  onsubmit="return confirm('¿Eliminar esta actividad?');">
+                {% csrf_token %}
+                <button type="submit" class="peligro">Eliminar</button>
+            </form>
+        {% endif %}
+    </div>
 </section>
 {% endblock %}

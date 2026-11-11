@@ -1,17 +1,9 @@
-# TP VII - Vistas y Templates en Django | Deportes UNCA
+# TP VIII - Admin de Django | Deportes UNCA
 
-Implementación de las tres consignas del Trabajo Práctico VII de Programación III.
+Programación III · Ingeniería en Informática · FTyCA – UNCA
+Alumno: Lopez Macias Leon (MU 01949) · Rama: `tp8-django`
 
-## Estructura
-
-- `manage.py`: comando de administración de Django.
-- `deportes/settings.py`: configuración del proyecto y SQLite.
-- `deportes/urls.py`: incluye las rutas de la aplicación `reservas`.
-- `reservas/models.py`: modelo `ActividadDeportiva`.
-- `reservas/forms.py`: formulario basado en `ModelForm`.
-- `reservas/views.py`: vistas para agregar, listar y ver el detalle.
-- `reservas/urls.py`: rutas `/actividades/`, `/actividades/agregar/` y `/actividades/<id>/`.
-- `reservas/templates/reservas/`: templates solicitados.
+Proyecto "Deportes UNCA" (continuación del TP VII) con el panel de administración de Django configurado, medidas de seguridad y autenticación basada en roles.
 
 ## Instalación y ejecución
 
@@ -19,55 +11,102 @@ Requiere Python 3.10 o superior.
 
 ```bash
 python -m venv venv
-```
-
-Activar el entorno virtual:
-
-Windows:
-```bash
-venv\Scripts\activate
-```
-
-Linux/macOS:
-```bash
-source venv/bin/activate
-```
-
-Instalar Django:
-
-```bash
+venv\Scripts\activate            # Windows
+source venv/bin/activate         # Linux/macOS
 pip install -r requirements.txt
-```
-
-Crear las tablas de SQLite:
-
-```bash
-python manage.py makemigrations reservas
-python manage.py migrate
-```
-
-Ejecutar el servidor:
-
-```bash
+python manage.py migrate         # crea las tablas y los roles
 python manage.py runserver
 ```
 
-Abrir en el navegador:
+- Sitio: http://127.0.0.1:8000/actividades/ (pide iniciar sesión)
+- Admin: http://127.0.0.1:8000/admin/
 
-- Listado: http://127.0.0.1:8000/actividades/
-- Agregar: http://127.0.0.1:8000/actividades/agregar/
-- Detalle: http://127.0.0.1:8000/actividades/1/
+## Consignas
 
-## Cómo se resuelven las consignas
+### 1) Superusuario
 
-1. `agregar_actividad`: muestra el formulario en GET. En POST valida con `is_valid()`, guarda con `save()` y muestra un mensaje mediante `messages.success`.
-2. `lista_actividades`: consulta todos los registros con `ActividadDeportiva.objects.all()` y los envía al template mediante el contexto.
-3. `detalle_actividad`: recibe `id` desde la URL y busca el registro con `get_object_or_404`, que responde 404 si no existe.
+```bash
+python manage.py createsuperuser
+```
 
-El formulario utiliza `method="post"` y `{% csrf_token %}`. Las vistas son funciones y las consultas se realizan con el ORM de Django.
+Se ingresa usuario, email y contraseña (la contraseña tiene que pasar los validadores: mínimo 8 caracteres, no común, no solo numérica). Con ese usuario se entra a `/admin/`.
 
-## Integración en el proyecto existente
+### 2) Registro del modelo en el Admin
 
-El repositorio público consultado contiene actualmente archivos HTML estáticos (`pagina1.html`, `pagina2.html` e `inscripciones.html`) en la rama `tp1-html5`; no aparece allí un proyecto Django ni una aplicación `reservas`. Por eso este ZIP incluye una estructura Django mínima y funcional para el TP. Si ya tenés el proyecto Django de la cátedra en otra carpeta o rama, podés copiar `models.py`, `forms.py`, `views.py`, `urls.py` y `templates/reservas/` a la aplicación `reservas`, y agregar `reservas` a `INSTALLED_APPS`.
+En `reservas/admin.py` el modelo `ActividadDeportiva` se registra con el decorador `@admin.register(ActividadDeportiva)` y una clase `ActividadDeportivaAdmin`.
 
-En el proyecto real, si `ActividadDeportiva` ya existe, conservá ese modelo y adaptá solamente los nombres de campos si fueran diferentes. No dupliques el modelo.
+### 3) Listar, crear, actualizar y eliminar
+
+Desde *Reservas → Actividades deportivas* se puede ver el listado, agregar con **Agregar actividad deportiva**, entrar a un registro para modificarlo y eliminarlo con **Eliminar** (o con la acción "Eliminar seleccionados" del listado). Las capturas están en [`docs/capturas/`](docs/capturas/).
+
+### 4) `list_display` y `search_fields`
+
+```python
+@admin.register(ActividadDeportiva)
+class ActividadDeportivaAdmin(admin.ModelAdmin):
+    list_display = ("id", "nombre", "lugar", "cupo")
+    search_fields = ("nombre", "lugar", "descripcion")
+    list_filter = ("lugar",)
+    list_display_links = ("id", "nombre")
+    ordering = ("nombre",)
+    list_per_page = 20
+```
+
+- `list_display`: columnas que muestra el listado.
+- `search_fields`: habilita la barra de búsqueda por nombre, lugar o descripción (por ejemplo, buscar "gimnasio").
+- Además se agregó un filtro lateral por lugar y títulos personalizados del panel.
+
+## Seguridad aplicada
+
+| Técnica | Dónde |
+|---|---|
+| `SECRET_KEY`, `DEBUG` y `ALLOWED_HOSTS` se leen de variables de entorno (`DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`) | `settings.py` |
+| Validadores de contraseña activados (longitud mínima, similitud con el usuario, contraseñas comunes, solo numéricas) | `settings.py` |
+| Protección CSRF: `CsrfViewMiddleware` y `{% csrf_token %}` en todos los formularios; eliminar y cerrar sesión solo por POST | middleware, templates, `@require_POST` |
+| Clickjacking: `X_FRAME_OPTIONS = "DENY"` | `settings.py` |
+| Cookies `HttpOnly`, sesión que vence en 1 hora y al cerrar el navegador | `settings.py` |
+| `SECURE_CONTENT_TYPE_NOSNIFF` y `SECURE_REFERRER_POLICY` | `settings.py` |
+| Con `DEBUG=False`: cookies solo por HTTPS, redirección a HTTPS y HSTS | `settings.py` |
+| XSS: los templates escapan automáticamente las variables | templates |
+| Inyección SQL: todas las consultas usan el ORM de Django | `views.py` |
+| Validación del lado del servidor: el cupo debe ser mayor que cero (en el formulario y en el modelo) | `forms.py`, `models.py` |
+| Todas las vistas exigen sesión iniciada (`@login_required`) y el permiso del rol (`@permission_required`, responde 403) | `views.py` |
+
+Verificación para producción:
+
+```bash
+DJANGO_DEBUG=False DJANGO_SECRET_KEY=<clave-larga> python manage.py check --deploy
+```
+
+## Autenticación basada en roles
+
+Los roles son **Grupos** de Django con permisos sobre `ActividadDeportiva`. Se crean solos al ejecutar `migrate` (migración `0003_crear_roles`).
+
+| Rol | Ver | Agregar | Modificar | Eliminar | Entra al Admin |
+|---|:-:|:-:|:-:|:-:|:-:|
+| Administrador | ✔ | ✔ | ✔ | ✔ | ✔ |
+| Coordinador | ✔ | ✔ | ✔ | ✖ | ✔ (solo lo que su rol permite) |
+| Socio | ✔ | ✖ | ✖ | ✖ | ✖ |
+
+Crear usuarios con un rol (la contraseña se pide por teclado):
+
+```bash
+python manage.py crear_usuario_rol coordinador Coordinador
+python manage.py crear_usuario_rol socio Socio
+```
+
+También se pueden crear desde el Admin (*Usuarios → Agregar* y asignarles un grupo).
+
+En el sitio, el menú y los botones (Agregar, Editar, Eliminar) aparecen según los permisos del usuario, y si alguien intenta entrar por URL a una acción que su rol no permite, recibe "Acceso denegado (403)". Rutas:
+
+- `/cuentas/login/` y cierre de sesión
+- `/actividades/`, `/actividades/<id>/`
+- `/actividades/agregar/`, `/actividades/<id>/editar/`, `/actividades/<id>/eliminar/`
+
+## Tests
+
+```bash
+python manage.py test reservas
+```
+
+Comprueban los roles, los permisos de cada uno, la redirección al login, la validación del cupo y la configuración y búsqueda del Admin.
