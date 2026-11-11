@@ -1,0 +1,33 @@
+{% extends "reservas/base.html" %}
+
+{% block titulo %}Agregar actividad | Deportes UNCA{% endblock %}
+
+{% block contenido %}
+<section class="panel">
+    <h2>Registrar una nueva actividad deportiva</h2>
+    <p>Completá los siguientes datos para incorporar una actividad a la plataforma.</p>
+
+    <form method="post" action="{% url 'reservas:agregar_actividad' %}">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <label for="{{ form.nombre.id_for_label }}">Nombre</label>
+        {{ form.nombre }}
+        {{ form.nombre.errors }}
+
+        <label for="{{ form.descripcion.id_for_label }}">Descripción</label>
+        {{ form.descripcion }}
+        {{ form.descripcion.errors }}
+
+        <label for="{{ form.lugar.id_for_label }}">Lugar</label>
+        {{ form.lugar }}
+        {{ form.lugar.errors }}
+
+        <label for="{{ form.cupo.id_for_label }}">Cupo</label>
+        {{ form.cupo }}
+        {{ form.cupo.errors }}
+
+        <button type="submit">Guardar actividad</button>
+    </form>
+</section>
+{% endblock %}

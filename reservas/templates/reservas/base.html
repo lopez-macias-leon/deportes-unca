@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Deportes UNCA{% endblock %}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f3f5f7; color: #202832; }
+        header { background: #123d63; color: white; padding: 22px max(5%, calc((100% - 1000px)/2)); }
+        header h1 { margin: 0 0 12px; }
+        nav a { color: white; margin-right: 18px; text-decoration: none; }
+        main { max-width: 1000px; margin: 32px auto; padding: 0 20px; }
+        .panel, article { background: white; padding: 22px; margin: 16px 0; border-radius: 9px; box-shadow: 0 2px 8px #0000000d; }
+        label { display: block; margin: 14px 0 6px; font-weight: bold; }
+        input, textarea { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #b9c4ce; border-radius: 5px; }
+        button, .boton { display: inline-block; background: #1769aa; color: white; border: 0; border-radius: 5px; padding: 11px 16px; text-decoration: none; cursor: pointer; margin-top: 16px; }
+        .mensaje { padding: 12px; border-radius: 5px; background: #e2f4e8; margin-bottom: 12px; }
+        .errorlist { color: #a32020; }
+        footer { text-align: center; padding: 24px; color: #687582; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Deportes UNCA</h1>
+    <nav>
+        <a href="{% url 'reservas:lista_actividades' %}">Actividades deportivas</a>
+        <a href="{% url 'reservas:agregar_actividad' %}">Agregar actividad</a>
+    </nav>
+</header>
+<main>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mensaje">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% block contenido %}{% endblock %}
+</main>
+<footer><p>Deportes UNCA &copy; 2026</p></footer>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{% extends "reservas/base.html" %}
+
+{% block titulo %}Actividades deportivas | Deportes UNCA{% endblock %}
+
+{% block contenido %}
+<section>
+    <h2>Actividades deportivas</h2>
+    <p>Estas son las actividades registradas en la plataforma.</p>
+
+    {% for actividad in actividades %}
+        <article>
+            <h3>{{ actividad.nombre }}</h3>
+            <p>{{ actividad.descripcion }}</p>
+            <p><strong>Lugar:</strong> {{ actividad.lugar }}</p>
+            <p><strong>Cupo:</strong> {{ actividad.cupo }} participantes</p>
+            <a class="boton" href="{% url 'reservas:detalle_actividad' actividad.id %}">Ver detalles</a>
+        </article>
+    {% empty %}
+        <article>
+            <p>Todavía no hay actividades registradas.</p>
+            <a class="boton" href="{% url 'reservas:agregar_actividad' %}">Agregar la primera actividad</a>
+        </article>
+    {% endfor %}
+
+    <a class="boton" href="{% url 'reservas:agregar_actividad' %}">Registrar nueva actividad</a>
+</section>
+{% endblock %}

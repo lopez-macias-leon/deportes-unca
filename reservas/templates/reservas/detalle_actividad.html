@@ -1,0 +1,13 @@
+{% extends "reservas/base.html" %}
+
+{% block titulo %}Detalle de actividad | Deportes UNCA{% endblock %}
+
+{% block contenido %}
+<section class="panel">
+    <h2>{{ actividad.nombre }}</h2>
+    <p><strong>Descripción:</strong> {{ actividad.descripcion }}</p>
+    <p><strong>Lugar:</strong> {{ actividad.lugar }}</p>
+    <p><strong>Cupo:</strong> {{ actividad.cupo }} participantes</p>
+    <a class="boton" href="{% url 'reservas:lista_actividades' %}">Volver a actividades</a>
+</section>
+{% endblock %}
